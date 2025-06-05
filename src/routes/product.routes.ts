@@ -1,3 +1,4 @@
+
 import express, { Request, Response } from 'express';
 import multer from 'multer';
 import cloudinary from '../config/cloudinary';
@@ -12,35 +13,58 @@ import {
   updateProduct,
 } from '../services/product.service';
 
-
-
 const router = express.Router();
 const upload = multer({ dest: 'uploads/' });
 
 
-router.get('/', async (req:Request , res:Response) => { 
-    try {
-        const products = await getAllProducts();
-        res.status(200).json(products);
-    } catch (error) {
-        console.error('Error fetching products:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-}
-);
-
-router.get('/:id', async (req: Request, res: Response) => {
-    try {
-        const product = await getProductById(req.params.id);
-        if (!product) return res.status(404).json({ error: 'Product not found' });
-        res.status(200).json(product);
-    } catch (error) {
-        console.error('Error fetching product:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
+router.get('/', async (req: Request, res: Response) => {
+  const products = await getAllProducts();
+  res.json(products);
 });
 
 
+router.get('/:id', async (req: Request, res: Response) => {
+  const product = await getProductById(req.params.id);
+  if (!product) return res.status(404).json({ error: 'Product not found' });
+  res.json(product);
+});
 
+
+router.post(
+  '/',
+  upload.single('photo'),
+  validateRequest(productSchema),
+  async (req: Request, res: Response) => {
+    const file = req.file as Express.Multer.File | undefined;
+    let photoUrl = '';
+
+    if (file) {
+      const result = await cloudinary.uploader.upload(file.path);
+      photoUrl = result.secure_url;
+    }
+
+    const product = await createProduct({ ...req.body, photo: photoUrl });
+    res.status(201).json(product);
+  }
+);
+
+
+router.put(
+  '/:id',
+  isAdmin,
+  validateRequest(productSchema),
+  async (req: Request, res: Response) => {
+    const updated = await updateProduct(req.params.id, req.body);
+    if (!updated) return res.status(404).json({ error: 'Product not found' });
+    res.json(updated);
+  }
+);
+
+
+router.delete('/:id', isAdmin, async (req: Request, res: Response) => {
+  const deleted = await deleteProduct(req.params.id);
+  if (!deleted) return res.status(404).json({ error: 'Product not found' });
+  res.json({ message: 'Product deleted successfully' });
+});
 
 export default router;
