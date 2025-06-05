@@ -1,0 +1,38 @@
+{
+  "name": "backend-home16",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hellen-Tchovelidze/backend-home16.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hellen-Tchovelidze/backend-home16/issues"
+  },
+  "homepage": "https://github.com/hellen-Tchovelidze/backend-home16#readme",
+  "description": "",
+  "dependencies": {
+    "cloudinary": "^2.6.1",
+    "concurrently": "^9.1.2",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "joi": "^17.13.3",
+    "mongoose": "^8.15.1",
+    "multer": "^2.0.1"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.13",
+    "@types/joi": "^17.2.2",
+    "@types/multer": "^1.4.12",
+    "@types/node": "^22.15.29",
+    "nodemon": "^3.1.10",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  }
+}
